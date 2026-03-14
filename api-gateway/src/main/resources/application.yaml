@@ -16,10 +16,14 @@ spring:
           uri: lb://PRODUCT-SERVICE
           predicates:
             - Path=/productapi/**
+          filters:
+            - AuthenticationFilter
         - id: coupon-service
           uri: lb://COUPON-SERVICE
           predicates:
             - Path=/couponapi/**
+          filters:
+            - AuthenticationFilter
 
 eureka:
   client:
@@ -34,3 +38,9 @@ management:
   zipkin:
     tracing:
       endpoint: "http://localhost:9411/api/v2/spans"
+app:
+  security:
+    user: "gilvan"
+    pass: "master123"
+    # The secret must be at least 32 characters long for the HS256 algorithm
+    jwt-secret: ${JWT_SECRET:this_is_a_very_secure_and_long_key_for_my_master_project}
