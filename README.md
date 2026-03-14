@@ -28,8 +28,19 @@ Implemented **Service Discovery** and **API Gateway**. Services register themsel
 - `/productapi/**` -> Product Service
 - `/couponapi/**` -> Coupon Service
 
-### 2. Fault Tolerance (Resilience4j)
-The Product Service is protected by a **Circuit Breaker**. If the Coupon Service is unavailable, a fallback mechanism ensures the product is still created/processed without the discount, preventing system-wide failure.
+## 📊 Observability & Resilience (Requirements 3.4 - 3.5)
+
+### Distributed Tracing (3.5)
+The system uses **Micrometer Tracing** and **Zipkin** to monitor requests across multiple services. 
+- Each request is assigned a unique **Trace ID** at the API Gateway.
+- This ID is propagated to Product and Coupon services, allowing end-to-end correlation in logs and the Zipkin UI.
+- **Visual Evidence:** Access `http://localhost:9411` to see the request timeline.
+
+### Fault Tolerance & Resilience (3.4)
+Implemented using **Resilience4j**:
+- **Retry:** The Product Service attempts to reconnect to the Coupon Service 3 times before failing.
+- **Circuit Breaker:** Automatically "opens" the circuit if failure rates exceed 50%, preventing resource exhaustion.
+- **Fallback:** If a coupon cannot be retrieved, the system gracefully processes the product at its original price, ensuring the core service remains available.
 
 ## 🚦 How to Run
 

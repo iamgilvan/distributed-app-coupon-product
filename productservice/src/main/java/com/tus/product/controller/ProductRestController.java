@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.List;
 
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+import io.github.resilience4j.retry.annotation.Retry;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -29,6 +30,7 @@ public class ProductRestController {
 	private String couponServiceURL = "http://COUPON-SERVICE/couponapi/coupons/";
 
 	@RequestMapping(value = "/products", method = RequestMethod.POST)
+	@Retry(name = "couponRetry", fallbackMethod = "handleFallback") // Tenta de novo se falhar
 	@CircuitBreaker(name = "couponService", fallbackMethod = "handleFallback")
 	public Product create(@RequestBody Product product) {
 		Coupon coupon = restTemplate.getForObject(couponServiceURL + product.getCouponCode(), Coupon.class);
