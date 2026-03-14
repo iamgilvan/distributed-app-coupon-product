@@ -1,0 +1,1 @@
+INSERT INTO product (name, description, price, coupon_code) VALUES ('iPhone 15', 'Smartphone Apple', 5000.00, 'DESC50');
